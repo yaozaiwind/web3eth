@@ -40,6 +40,10 @@ class web3test:
         a = wp3.eth.blockNumber
         return a
 
+    def getListFromBlock(self,blocknum=wp3.eth.blockNumber):
+        blockList = wp3.eth.getBlock(blocknum, full_transactions=True)
+        return blockList['transactions']
+
     def getBalance(self, account="0x8aA4c17EA21804f7c27E2f0BB1444C7941171319"):
         print('%s 账户的金额' % account)
         a = wp3.eth.getBalance(account)
@@ -54,11 +58,8 @@ class web3test:
             except:
                 print('解锁失败')
 
-    def circle(self, ob=None):
-        import time
-        while 1:
-            time.sleep(1)
-            self.getBalance()
+    def getTansRes(self,hash):
+        return wp3.eth.getTransactionReceipt(hash) # 通过hash 获取交易结果
 
     def newAccount(self, passwd='123456'):
         acc = w3.eth.account.create(passwd)
@@ -103,25 +104,26 @@ if __name__ == '__main__':
     tt = web3test()
     print(Web3.fromWei(tt.getBalance(), 'ether')) #账号余额
 
+    print(tt.getListFromBlock())
 
-  #生成新账号，并保存到文件，文件名用公钥地址
-    acc ,keystore= tt.newAccount()
-    print(acc)
-    print(keystore)
-    with open(acc.address,'w') as f:
-        f.write(json.dumps(keystore))
+#生成新账号，并保存到文件，文件名用公钥地址
+    # acc ,keystore= tt.newAccount()
+    # print(acc)
+    # print(keystore)
+    # with open(acc.address,'w') as f:
+    #     f.write(json.dumps(keystore))
 
 
-  # ethereum 库帮助生成签名信息发交易
+#  ethereum 库帮助生成签名信息发交易
   #   re = tt.sendRawTransaction(pri_key=tt.loadkey(),target='0xaaD7CB0Ad13e4a77e95E03e8984f800e2e9695a4',value=1000000000000000000)
   #   print(re)
 
 
-  #用web3 发交易
-    # key = tt.loadkey()
-    # print (key)
-    # a = tt.signTrans()
-    # print(a)
-    # r = tt.sendRaw(rawdata=a)
-    # print(r)
+#  用web3 发交易
+#     key = tt.loadkey()
+#     print (key)
+#     a = tt.signTrans()
+#     print(a)
+#     r = tt.sendRaw(rawdata=a)
+#     print(r)
 
