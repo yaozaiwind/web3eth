@@ -1,7 +1,7 @@
 # coding:utf-8
 import requests,json,testrpc
 from web3 import Web3, HTTPProvider,TestRPCProvider,IPCProvider
-
+import web3test
 provider = HTTPProvider('https://ropsten.infura.io/CXduySaW5b61XIZBnh7Y')
 
 web3 = Web3(HTTPProvider("192.168.1.33:8545"))
@@ -22,3 +22,5 @@ r1 = '0xd5c1c43e890fc45a8c605091be5b05318b22179f759bd5ced734bf429909a3fc'
 r2 = '0xa4d791c55d86ec4f802af9063b5a4ced27714daee3a281e68b26514dd18ec340'
 print (web3.sha3(hexstr='0x789456'))
 
+a = web3test.web3test()
+print(a.getBalance())
