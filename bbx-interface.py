@@ -35,13 +35,36 @@ class bbxrequest:
         print("BODY is : ", json.dumps(self.submit_oder_buy_data))
         self.request()
 
-    def getorder(self):
-        pass
-        orderrequest = requests.get('http://api.bbx.com/v1/ifmarket/vipGetOrders')
-        # 这段还没通
+    def getorder(self,userid="a10000001",secret="b10000001"):
+        self.header["Bbx-Accesskey"] = userid
+        self.header["Bbx-Sign"]=self.getmd5_value(secret)
+        orderrequest = requests.get('http://api.bbx.com/v1/ifmarket/vipGetOrders',headers=self.header)
+        print(orderrequest.json())
+        orderlist = orderrequest.json()["data"]["orders"]
+        print(orderlist)
+        # status 1 是 申报中，2是委托中，3是已完成
+        live_order =[]
+        print(type(live_order))
+        for i in orderlist:
+            if 2 == i["status"]:
+                live_order.append(i)
 
-    def order_cancel(self):
-        pass
+        return live_order
+
+    def order_cancel(self,orderid,stock_code="ETH/BBX",):
+
+        data = {'stock_code': stock_code, 'order_id': orderid, 'nonce': int(time.time())}
+        print(data)
+        bbxsign = json.dumps(data)+self.secret1
+        self.header["Bbx-Sign"] = self.getmd5_value(text=bbxsign)
+        request = requests.post('http://api.bbx.com/v1/ifmarket/vipCancelOrder',headers=self.header,data=json.dumps(data))
+        return request.text
+
+    def cancel_all(self,orderlist):
+        for i in orderlist:
+            res = self.order_cancel(orderid=i["order_id"],stock_code=i["stock_code"])
+            print(res)
+
 
     def request(self):
         request = requests.post('http://api.bbx.com/v1/ifmarket/vipSubmitOrder', headers=self.header,
@@ -58,6 +81,7 @@ class bbxrequest:
 
 
 if __name__ == '__main__':
-    pass
     bbx = bbxrequest()
-    bbx.run()
+    a = bbx.getorder()
+    bbx.cancel_all(a)
+
