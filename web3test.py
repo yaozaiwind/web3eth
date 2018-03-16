@@ -49,7 +49,7 @@ class web3test:
         a = wp3.eth.getBalance(account)
         return a
 
-    def loadkey(self, file='88888',passwd='123456'):
+    def loadkey(self, file='0x49E93aA0CEBE448f1603e8AB932ecc04645dc9B9',passwd='123456'):
         with open(file) as keyfile:
             encrypted_key = keyfile.read()
             try:
@@ -105,6 +105,7 @@ if __name__ == '__main__':
     print(Web3.fromWei(tt.getBalance(), 'ether')) #账号余额
 
     print(tt.getListFromBlock())
+
 
 #生成新账号，并保存到文件，文件名用公钥地址
     # acc ,keystore= tt.newAccount()
