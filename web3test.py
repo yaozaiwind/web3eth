@@ -1,6 +1,6 @@
 # coding:utf-8
 from web3 import Web3, HTTPProvider
-from web3.personal import Personal
+
 from web3.auto import w3
 import json
 
@@ -32,11 +32,16 @@ class web3test:
 
     def get_estimategas_etherscan(self):
         import requests
-        print(wp3.eth.gasPrice,'web3 接口价格')
+        print(wp3.eth.gasPrice,'web3 属性价格')
         res = requests.get(
-            "https://ropsten.etherscan.io/api?module=proxy&action=eth_estimateGas&to=0xf0160428a8552ac9bb7e050d90eeade4ddd52843&value=0xff22&gasPrice=0x051da038cc&gas=0xffffff&apikey=Q4XIJ8287JNPRUZG1WSBWB3H4YH1AIY6G7")
+            "https://api-ropsten.etherscan.io/api?module=proxy&action=eth_estimateGas&to=0xf0160428a8552ac9bb7e050d90eeade4ddd52843&value=0xff22&gasPrice=0x051da038cc&gas=0xffffff&apikey=Q4XIJ8287JNPRUZG1WSBWB3H4YH1AIY6G7")
         value = eval(res.text)
         print(value,'etherscan 查询价格')
+        res2 = requests.get("https://api-ropsten.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=YourApiKeyToken")
+        etherscanGas = eval(res2.text)
+        print(etherscanGas,type(etherscanGas),etherscanGas['result'],type(etherscanGas['result']))
+        gas2 = wp3.toInt(hexstr=etherscanGas['result'])
+        print(gas2)
         return int(value['result'], 16)
 
     def getblocknumber(self):
@@ -52,7 +57,7 @@ class web3test:
         a = wp3.eth.getBalance(account)
         return a
 
-    def loadkey(self, file='88888',passwd='yaozai1983'):
+    def loadkey(self, file='0x49E93aA0CEBE448f1603e8AB932ecc04645dc9B9',passwd='123456'):
         with open(file) as keyfile:
             encrypted_key = keyfile.read()
             try:
@@ -101,6 +106,14 @@ class web3test:
         print(rawtx_hex)
         a = wp3.eth.sendRawTransaction(rawtx_hex)
         return wp3.toHex(a)
+
+    def pendingTrans(self):
+        from web3.txpool import TxPool
+        pool = TxPool(wp3)
+        print('显示inspect',pool.inspect)
+        print('显示status',pool.status)
+        print('显示content',pool.content)
+
 
 
 

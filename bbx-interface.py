@@ -38,7 +38,7 @@ class bbxrequest:
     def getorder(self,userid="a10000001",secret="b10000001"):
         self.header["Bbx-Accesskey"] = userid
         self.header["Bbx-Sign"]=self.getmd5_value(secret)
-        orderrequest = requests.get('http://api.bbx.com/v1/ifmarket/vipGetOrders',headers=self.header)
+        orderrequest = requests.get('http://api.bbx.com/v1/ifmarket/vipGetOrders?stockCode="ETH/BBX"&status=2',headers=self.header)
         print(orderrequest.json())
         orderlist = orderrequest.json()["data"]["orders"]
         print(orderlist)
