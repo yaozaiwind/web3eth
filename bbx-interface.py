@@ -36,6 +36,14 @@ class bbxrequest:
         self.request()
 
     def getorder(self,userid="a10000001",secret="b10000001"):
+
+        '''getOrders?stockCode="ETH/BBX"&status=2
+           获取用户的某个币值对对应状态的所有任务
+           如果stockCode不传,则表示不区分币值对
+           status = 2,表示委托中
+           status=3,表示已经完成
+           如果status不传,则表示不分区状态'''
+
         self.header["Bbx-Accesskey"] = userid
         self.header["Bbx-Sign"]=self.getmd5_value(secret)
         orderrequest = requests.get('http://api.bbx.com/v1/ifmarket/vipGetOrders?stockCode="ETH/BBX"&status=2',headers=self.header)
