@@ -18,7 +18,9 @@ ok_key = '91f155d4ca2474ab855a8e3a8b4213200b8d6639d147091dd66264cfc37491f8'
 class web3test:
 
     def __init__(self):
-        from eth_account import Account
+        from web3.version import Version
+        ver = Version(wp3)
+        self.ethNet = ver.network
         self.Jdata = '{"jsonrpc":"2.0","method":"eth_getBalance","params":["0xB8DC8bD7005b6EeBced32F80C2a541CB864EB6ae", "latest"],"id":1}'
         w3.eth.enable_unaudited_features()
         print("web3 version is : ", wp3.version.api)
@@ -30,10 +32,11 @@ class web3test:
 
     def get_estimategas_etherscan(self):
         import requests
-        print(wp3.eth.gasPrice)
+        print(wp3.eth.gasPrice,'web3 接口价格')
         res = requests.get(
             "https://ropsten.etherscan.io/api?module=proxy&action=eth_estimateGas&to=0xf0160428a8552ac9bb7e050d90eeade4ddd52843&value=0xff22&gasPrice=0x051da038cc&gas=0xffffff&apikey=Q4XIJ8287JNPRUZG1WSBWB3H4YH1AIY6G7")
         value = eval(res.text)
+        print(value,'etherscan 查询价格')
         return int(value['result'], 16)
 
     def getblocknumber(self):
@@ -49,14 +52,15 @@ class web3test:
         a = wp3.eth.getBalance(account)
         return a
 
-    def loadkey(self, file='0x49E93aA0CEBE448f1603e8AB932ecc04645dc9B9',passwd='123456'):
+    def loadkey(self, file='88888',passwd='yaozai1983'):
         with open(file) as keyfile:
             encrypted_key = keyfile.read()
             try:
-                private_key = w3.eth.account.decrypt(encrypted_key, 'yaozai1983')
+                private_key = w3.eth.account.decrypt(encrypted_key, passwd)
                 return Web3.toHex(private_key)
             except:
                 print('解锁失败')
+                return None
 
     def getTansRes(self,hash):
         return wp3.eth.getTransactionReceipt(hash) # 通过hash 获取交易结果
@@ -70,11 +74,11 @@ class web3test:
     def keyStoreGen(self,private_key,passwd='123456'):
         return w3.eth.account.encrypt(private_key,passwd)
 
-    def signTrans(self, target='0xaaD7CB0Ad13e4a77e95E03e8984f800e2e9695a4', key='',from_add='0x8aA4c17EA21804f7c27E2f0BB1444C7941171319'):
+    def signTrans(self, target='0xaaD7CB0Ad13e4a77e95E03e8984f800e2e9695a4', key='',from_add='0x8aA4c17EA21804f7c27E2f0BB1444C7941171319',value = ""):
         key = self.loadkey()
         # chainId 见 chainID 文件
         transaction = {"to": target, "value": 1000000000000000000, "gas": 2000000, "gasPrice": wp3.eth.gasPrice,
-                       "nonce": wp3.eth.getTransactionCount(from_add), "chainId": 3,"data" : ""}
+                       "nonce": wp3.eth.getTransactionCount(from_add), "chainId": int(self.ethNet),"data" : ""}
         signed = w3.eth.account.signTransaction(transaction, key)
         return (signed.rawTransaction)
 
@@ -104,7 +108,9 @@ if __name__ == '__main__':
     tt = web3test()
     print(Web3.fromWei(tt.getBalance(), 'ether')) #账号余额
 
-    print(tt.getListFromBlock())
+    #print(tt.getListFromBlock(),'块中所有内容')
+
+    tt.get_estimategas_etherscan()
 
 
 #生成新账号，并保存到文件，文件名用公钥地址
@@ -122,9 +128,11 @@ if __name__ == '__main__':
 
 #  用web3 发交易
 #     key = tt.loadkey()
-#     print (key)
+#     print (key,'账号')
 #     a = tt.signTrans()
 #     print(a)
 #     r = tt.sendRaw(rawdata=a)
 #     print(r)
+
+
 
