@@ -22,7 +22,7 @@ class bbxrequest:
 
     #  Way :1 和2 分别是买卖单类型
     submit_oder_buy_data = {"category": 1, "fee_coin_code": "BBX", "stock_code": "ETH/BBX", "price": 2000000000,
-                             "vol": 100000000, "way": 2, "nonce": 1520315223}
+                             "vol": 100000000, "way": 1, "nonce": 1520315223}
 
     def __init__(self):
         pass
@@ -33,7 +33,8 @@ class bbxrequest:
         self.header["Bbx-Sign"] = self.getmd5_value(text=self.bbxsign)
         print("HEADER is : ", self.header)
         print("BODY is : ", json.dumps(self.submit_oder_buy_data))
-        self.request()
+        result = self.request()
+        return result
 
     def getorder(self,userid="a10000001",secret="b10000001"):
 
@@ -93,9 +94,9 @@ class bbxrequest:
 
 if __name__ == '__main__':
     bbx = bbxrequest()
-    a = bbx.getorder()
-    while 1:
-        time.sleep(1)
-        r = bbx.cancel_all(a)
-        print(r)
-    #bbx.run()
+    #a = bbx.getorder()
+    # while 1:
+    #     time.sleep(1)
+    #     r = bbx.cancel_all(a)
+    #     print(r)
+    bbx.run()
