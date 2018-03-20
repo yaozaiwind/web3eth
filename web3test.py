@@ -1,5 +1,5 @@
 # coding:utf-8
-from web3 import Web3, HTTPProvider
+from web3 import Web3, HTTPProvider,contract
 
 from web3.auto import w3
 import json
@@ -108,6 +108,7 @@ class web3test:
         return wp3.toHex(a)
 
     def pendingTrans(self):
+        #infura  拒绝调用这个接口
         from web3.txpool import TxPool
         pool = TxPool(wp3)
         print('显示inspect',pool.inspect)
