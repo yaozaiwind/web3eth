@@ -35,7 +35,7 @@ class bbxrequest:
         print("BODY is : ", json.dumps(self.submit_oder_buy_data))
         self.request()
 
-    def getorder(self,userid="a10000002",secret="b10000002"):
+    def getorder(self,userid="a10000001",secret="b10000001"):
 
         '''getOrders?stockCode="ETH/BBX"&status=2
            获取用户的某个币值对对应状态的所有任务
@@ -46,7 +46,7 @@ class bbxrequest:
 
         self.header["Bbx-Accesskey"] = userid
         self.header["Bbx-Sign"]=self.getmd5_value(secret)
-        orderrequest = requests.get('http://api.bbx.com/v1/ifmarket/vipGetOrders',headers=self.header)
+        orderrequest = requests.get('http://api.bbx.com/v1/ifmarket/vipGetOrders?status=2',headers=self.header)
         print(orderrequest.json())
         orderlist = orderrequest.json()["data"]["orders"]
         print(orderlist)
@@ -69,9 +69,12 @@ class bbxrequest:
         return request.text
 
     def cancel_all(self,orderlist):
+        if [] == orderlist:
+            return False
         for i in orderlist:
             res = self.order_cancel(orderid=i["order_id"],stock_code=i["stock_code"])
             print(res)
+        return True
 
 
     def request(self):
@@ -90,6 +93,9 @@ class bbxrequest:
 
 if __name__ == '__main__':
     bbx = bbxrequest()
-    # a = bbx.getorder()
-    # bbx.cancel_all(a)
-    bbx.run()
+    a = bbx.getorder()
+    while 1:
+        time.sleep(1)
+        r = bbx.cancel_all(a)
+        print(r)
+    #bbx.run()

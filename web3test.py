@@ -115,6 +115,10 @@ class web3test:
         print('显示status',pool.status)
         print('显示content',pool.content)
 
+    def contract_Tans(self):
+        from ethtoken.abi import EIP20_ABI
+        coins = wp3.eth.contract(address = "0x21530a27E2be1f4E77171503D5255B8757A852A5",abi=EIP20_ABI)
+
 
 
 
