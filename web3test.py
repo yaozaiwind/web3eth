@@ -1,5 +1,5 @@
 # coding:utf-8
-from web3 import Web3, HTTPProvider,contract
+from web3 import Web3, HTTPProvider
 
 from web3.auto import w3
 import json
@@ -13,12 +13,14 @@ LanUbuntu = HTTPProvider('http://192.168.1.22:8545')
 wp3 = Web3([infuraRopsten])
 
 ok_key = '91f155d4ca2474ab855a8e3a8b4213200b8d6639d147091dd66264cfc37491f8'
-
+bbxRopsten = '0x21530a27E2be1f4E77171503D5255B8757A852A5'
 
 class web3test:
-
+    private_key = None
     def __init__(self):
         from web3.version import Version
+        self.keyfile = '88888'
+        self.keypasswd = 'yaozai1983'
         ver = Version(wp3)
         self.ethNet = ver.network
         self.Jdata = '{"jsonrpc":"2.0","method":"eth_getBalance","params":["0xB8DC8bD7005b6EeBced32F80C2a541CB864EB6ae", "latest"],"id":1}'
@@ -57,7 +59,7 @@ class web3test:
         a = wp3.eth.getBalance(account)
         return a
 
-    def loadkey(self, file='0x49E93aA0CEBE448f1603e8AB932ecc04645dc9B9',passwd='123456'):
+    def loadkey(self, file='88888',passwd='yaozai1983'):
         with open(file) as keyfile:
             encrypted_key = keyfile.read()
             try:
@@ -79,10 +81,10 @@ class web3test:
     def keyStoreGen(self,private_key,passwd='123456'):
         return w3.eth.account.encrypt(private_key,passwd)
 
-    def signTrans(self, target='0xaaD7CB0Ad13e4a77e95E03e8984f800e2e9695a4', key='',from_add='0x8aA4c17EA21804f7c27E2f0BB1444C7941171319',value = ""):
-        key = self.loadkey()
+    def signTrans(self, target='0xaaD7CB0Ad13e4a77e95E03e8984f800e2e9695a4', from_add='0x8aA4c17EA21804f7c27E2f0BB1444C7941171319',value =1000000000000000000,gas=2000000):
+        key = self.private_key
         # chainId 见 chainID 文件
-        transaction = {"to": target, "value": 1000000000000000000, "gas": 2000000, "gasPrice": wp3.eth.gasPrice,
+        transaction = {"to": target, "value": value, "gas": gas, "gasPrice": wp3.eth.gasPrice,
                        "nonce": wp3.eth.getTransactionCount(from_add), "chainId": int(self.ethNet),"data" : ""}
         signed = w3.eth.account.signTransaction(transaction, key)
         return (signed.rawTransaction)
@@ -90,8 +92,7 @@ class web3test:
     def sendRaw(self,rawdata):
         return wp3.toHex(wp3.eth.sendRawTransaction(rawdata))
 
-    def sendRawTransaction(self, from_add='0x8aA4c17EA21804f7c27E2f0BB1444C7941171319', pri_key=None, target=None,
-                           value=None):
+    def sendRawTransaction(self, from_add='0x8aA4c17EA21804f7c27E2f0BB1444C7941171319', pri_key=None, target=None,value=None):
         import rlp
         from ethereum.transactions import Transaction
 
@@ -115,21 +116,37 @@ class web3test:
         print('显示status',pool.status)
         print('显示content',pool.content)
 
-    def contract_Tans(self):
+    def contract_Tans(self,fromacc ='0x8aA4c17EA21804f7c27E2f0BB1444C7941171319',toacc = "0xaaD7CB0Ad13e4a77e95E03e8984f800e2e9695a4",contract = bbxRopsten):
         from ethtoken.abi import EIP20_ABI
-        coins = wp3.eth.contract(address = "0x21530a27E2be1f4E77171503D5255B8757A852A5",abi=EIP20_ABI)
+        coins = wp3.eth.contract(address = contract,abi=EIP20_ABI)
+        balance = coins.functions.balanceOf(fromacc)
+        print(balance)
+        cointransTx =coins.functions.transfer(toacc,1000000000000000000,).buildTransaction\
+            ({"chainId":self.ethNet,"gas": 70000,"gasPrice": wp3.eth.gasPrice,"nonce":wp3.eth.getTransactionCount(fromacc)})
+        print(cointransTx)
+        signed = w3.eth.account.signTransaction(cointransTx,self.private_key)
+        print(signed.rawTransaction)
+        print(signed.r)
+        resTx = self.sendRaw(signed.rawTransaction)
+        return resTx
+
+    def tokenbalance(self,fromacc ='0x8aA4c17EA21804f7c27E2f0BB1444C7941171319',contract = bbxRopsten):
+        from ethtoken.abi import EIP20_ABI
+        coins = wp3.eth.contract(address = contract,abi=EIP20_ABI)
+        balance = coins.functions.balanceOf(fromacc).call()
+        print(balance)
+
+
 
 
 
 
 if __name__ == '__main__':
     tt = web3test()
+    tt.private_key=tt.loadkey()
     print(Web3.fromWei(tt.getBalance(), 'ether')) #账号余额
 
     #print(tt.getListFromBlock(),'块中所有内容')
-
-    tt.get_estimategas_etherscan()
-
 
 #生成新账号，并保存到文件，文件名用公钥地址
     # acc ,keystore= tt.newAccount()
@@ -144,13 +161,14 @@ if __name__ == '__main__':
   #   print(re)
 
 
-#  用web3 发交易
-#     key = tt.loadkey()
-#     print (key,'账号')
-#     a = tt.signTrans()
-#     print(a)
-#     r = tt.sendRaw(rawdata=a)
-#     print(r)
+ #用web3 发交易
+    # key = tt.loadkey()
+    # print (key,'账号')
+    # a = tt.signTrans()
+    # print(a)
+    # r = tt.sendRaw(rawdata=a)
+    # print(r)
 
-
-
+    # res = tt.contract_Tans()
+    # print(res,'收到的HASH')
+    tt.tokenbalance()
