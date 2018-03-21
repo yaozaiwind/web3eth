@@ -94,9 +94,9 @@ class bbxrequest:
 
 if __name__ == '__main__':
     bbx = bbxrequest()
-    #a = bbx.getorder()
-    # while 1:
-    #     time.sleep(1)
-    #     r = bbx.cancel_all(a)
-    #     print(r)
-    bbx.run()
+    a = bbx.getorder()
+    while 1:
+        time.sleep(1)
+        r = bbx.cancel_all(a)
+        print(r)
+    #bbx.run()
