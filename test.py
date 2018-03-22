@@ -1,5 +1,5 @@
 # coding:utf-8
-import requests,json
+import requests,json,pprint
 from web3 import Web3, HTTPProvider,TestRPCProvider,IPCProvider,version
 import web3test
 provider = HTTPProvider('https://ropsten.infura.io/CXduySaW5b61XIZBnh7Y')
@@ -14,8 +14,7 @@ wh3 = Web3(provider)
 # print (web3.sha3(hexstr='0x789456'))
 
 #a = web3test.web3test()
-b = version.Version(wh3)
-print(b.network,type(b.network))
-b = wh3.eth.getBlock
-blockList = wh3.eth.getBlock(b,full_transactions=True)
-print(blockList['transactions'])
+# b = version.Version(wh3)
+# print(b.network,type(b.network))
+blockList = wh3.eth.getBlock('pending',full_transactions=True)
+pprint.pprint(blockList['transactions'])
