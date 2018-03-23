@@ -2,7 +2,7 @@
 from web3 import Web3, HTTPProvider
 
 from web3.auto import w3
-import json
+import json,pprint
 
 infuraRopsten = HTTPProvider('https://ropsten.infura.io/CXduySaW5b61XIZBnh7Y')
 etherscanRopsten = HTTPProvider('http://api-ropsten.etherscan.io')
@@ -120,13 +120,13 @@ class web3test:
         from ethtoken.abi import EIP20_ABI
         coins = wp3.eth.contract(address = contract,abi=EIP20_ABI)
         balance = coins.functions.balanceOf(fromacc)
-        print(balance)
+        pprint.pprint(balance)
         cointransTx =coins.functions.transfer(toacc,1000000000000000000,).buildTransaction\
             ({"chainId":self.ethNet,"gas": 70000,"gasPrice": wp3.eth.gasPrice,"nonce":wp3.eth.getTransactionCount(fromacc)})
-        print(cointransTx)
+        pprint.pprint(cointransTx)
         signed = w3.eth.account.signTransaction(cointransTx,self.private_key)
-        print(signed.rawTransaction)
-        print(signed.r)
+        pprint.pprint(signed.rawTransaction)
+        pprint.pprint(signed.r)
         resTx = self.sendRaw(signed.rawTransaction)
         return resTx
 
@@ -134,7 +134,8 @@ class web3test:
         from ethtoken.abi import EIP20_ABI
         coins = wp3.eth.contract(address = contract,abi=EIP20_ABI)
         balance = coins.functions.balanceOf(fromacc).call()
-        print(balance)
+        pprint.pprint(balance)
+        return balance
 
 
 
@@ -144,7 +145,7 @@ class web3test:
 if __name__ == '__main__':
     tt = web3test()
     tt.private_key=tt.loadkey()
-    print(Web3.fromWei(tt.getBalance(), 'ether')) #账号余额
+    pprint.pprint(Web3.fromWei(tt.getBalance(), 'ether')) #账号余额
 
     #print(tt.getListFromBlock(),'块中所有内容')
 
