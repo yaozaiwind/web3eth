@@ -1,8 +1,8 @@
-# coding:utf-8
+#coding:utf-8
 from web3 import Web3, HTTPProvider
 
 from web3.auto import w3
-import json,pprint
+import pprint
 
 infuraRopsten = HTTPProvider('https://ropsten.infura.io/CXduySaW5b61XIZBnh7Y')
 etherscanRopsten = HTTPProvider('http://api-ropsten.etherscan.io')
