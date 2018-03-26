@@ -15,7 +15,7 @@ def test():
     time.sleep(1)
     btn = browser.find_element_by_id("ss_searchBtn")
     btn.click()
-    time.sleep(5)
+    time.sleep(10)
     browser.close()
 
 def test1():
