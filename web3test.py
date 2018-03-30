@@ -19,8 +19,8 @@ class web3test:
     private_key = None
     def __init__(self):
         from web3.version import Version
-        self.keyfile = '88888'
-        self.keypasswd = 'yaozai1983'
+        self.keyfile = '0x49E93aA0CEBE448f1603e8AB932ecc04645dc9B9'
+        self.keypasswd = '123456'
         ver = Version(wp3)
         self.ethNet = ver.network
         self.Jdata = '{"jsonrpc":"2.0","method":"eth_getBalance","params":["0xB8DC8bD7005b6EeBced32F80C2a541CB864EB6ae", "latest"],"id":1}'
@@ -93,6 +93,7 @@ class web3test:
         return wp3.toHex(wp3.eth.sendRawTransaction(rawdata))
 
     def sendRawTransaction(self, from_add='0x8aA4c17EA21804f7c27E2f0BB1444C7941171319', pri_key=None, target=None,value=None):
+        # python3.6  不能用
         import rlp
         from ethereum.transactions import Transaction
 
@@ -144,8 +145,10 @@ class web3test:
 
 if __name__ == '__main__':
     tt = web3test()
-    tt.private_key=tt.loadkey()
-    pprint.pprint(Web3.fromWei(tt.getBalance(), 'ether')) #账号余额
+    tt.getTansRes(hash='')
+    # tt.private_key=tt.loadkey()
+    # pprint.pprint(Web3.fromWei(tt.getBalance(), 'ether')) #账号余额
+    #tt.tokenbalance()
 
     #print(tt.getListFromBlock(),'块中所有内容')
 
@@ -172,4 +175,4 @@ if __name__ == '__main__':
 
     # res = tt.contract_Tans()
     # print(res,'收到的HASH')
-    tt.tokenbalance()
+

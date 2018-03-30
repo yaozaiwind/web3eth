@@ -20,7 +20,7 @@ class bbxrequest:
         "Content-Type": "application/json"
     }
 
-    #  Way :1 和2 分别是买卖单类型
+    #  way :1 和2 分别是买卖单类型   category  1,2  限价单，市价单
     submit_oder_buy_data = {"category": 1, "fee_coin_code": "BBX", "stock_code": "ETH/BBX", "price": 2000000000,
                              "vol": 100000000, "way": 1, "nonce": 1520315223}
 
